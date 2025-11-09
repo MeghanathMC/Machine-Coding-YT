@@ -6,7 +6,6 @@ const FeedContainer = () => {
   return (
     <div className=" w-full">
       <ButtonList />
-
       <VideoContainer />
     </div>
   );

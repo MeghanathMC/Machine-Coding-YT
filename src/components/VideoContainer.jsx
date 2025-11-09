@@ -1,44 +1,41 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "./VideoCard";
-import axios from "axios";
+import { YT_VIDEOS_API } from "../constants/api";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setVideoDetails } from "../store/videoSlice";
 const VideoContainer = () => {
   const [videos, setVideos] = useState([]);
+  const [videoInfo, setVideoInfo] = useState({});
+
+  const dispatch = useDispatch();
+  const handleWatchVideo = (videoDetial) => {
+    setVideoInfo(videoDetial);
+    dispatch(setVideoDetails(videoDetial));
+  };
 
   const getVideos = async () => {
-    const res = await axios.get(
-      "https://www.googleapis.com/youtube/v3/videos",
-      {
-        params: {
-          part: "snippet,statistics",
-          chart: "mostPopular",
-          maxResults: 30,
-          regionCode: "US",
-          key: import.meta.env.YT_API_KEY,
-        },
-      }
-    );
-    console.log(res);
-
-    // const data = await res.json();
-    // setVideos(data);
+    const res = await fetch(YT_VIDEOS_API);
+    // console.log(res);
+    const data = await res.json();
+    // console.log(data.items);
+    setVideos(data.items);
   };
 
   useEffect(() => {
     getVideos();
   }, []);
   return (
-    <div className="min-h-screen p-4 gap-4 flex flex-wrap">
-      <VideoCard />
-      <VideoCard />
-      <VideoCard />
-      <VideoCard />
-      <VideoCard />
-      <VideoCard />
-      {/* {videos.map((video) => (
-        <div key={video.id} className="w-full sm:w-1/2 lg:w-1/3">
-          <VideoCard />
-        </div>
-      ))} */}
+    <div className="min-h-screen p-4 gap-2 flex flex-wrap">
+      {videos.map((video) => (
+        <Link
+          to={`/watch/?v=${video.id}`}
+          onClick={() => handleWatchVideo(video)}
+        >
+          {" "}
+          <VideoCard key={video.id} {...video} />
+        </Link>
+      ))}
     </div>
   );
 };

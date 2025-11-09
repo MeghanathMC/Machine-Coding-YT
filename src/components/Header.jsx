@@ -1,11 +1,31 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { toggleSideBar } from "../store/navSlice";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
+  const toggleMenu = () => {
+    dispatch(toggleSideBar());
+  };
+
   return (
     <div className="flex shadow-md justify-between items-center">
       <div className="flex p-4 gap-4">
-        <img className="h-6" src="./hamberger.svg" alt="hamberger-menu" />
-        <img className="h-6" src="./logo.svg" alt="youtube-logo" />
+        <div>
+          <img
+            className="h-6 cursor-pointer rounded-full  hover:bg-gray-200"
+            onClick={() => toggleMenu()}
+            src="./hamberger.svg"
+            alt="hamberger-menu"
+          />
+        </div>
+        <div>
+          <a href="/">
+            <img className="h-6" src="./logo.svg" alt="youtube-logo" />
+          </a>
+        </div>
       </div>
 
       <div className="flex p-4">
